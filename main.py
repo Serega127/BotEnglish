@@ -12,7 +12,7 @@ with open("words_coper.txt", "r", encoding='utf-8') as file:
 
 # print(words_dict)
 
-bot = telebot.TeleBot('')
+bot = telebot.TeleBot('API-KEY')
 
 @bot.message_handler(commands=['start'])
 def start(message):
