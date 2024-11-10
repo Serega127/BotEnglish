@@ -1,4 +1,5 @@
 import telebot
+from telebot import types
 
 with open("words_coper.txt", "r", encoding='utf-8') as file:
     words_list = file.read().split('\n')[:-1]
@@ -9,44 +10,39 @@ with open("words_coper.txt", "r", encoding='utf-8') as file:
 
 # print(words_dict)
 
-words = iter(words_dict.items())
-# def cikcle():
-#     try:
-#         word = next(words)
-#         print(word)
-#         word = next(words)
-#         print(word)
-#         word = next(words)
-#         print(word)
-#         word = next(words)
-#         print(word)
-#         word = next(words)
-#         print(word)
-#     except StopIteration:
-#         print('Конец')
-#
-# cikcle()
-
-bot = telebot.TeleBot('API_KEY')
-
-@bot.message_handler(commands=['help'])
-def start_handler(message):
-    bot.reply_to(message, 'Список доступных команд:\ /start — начать работу с ботом\ /help — получить справку о работе бота.')
-
+bot = telebot.TeleBot('7998808652:AAEXyWyGuo3gjfZyryQOIlm6FU73s0JgFn0')
 
 @bot.message_handler(commands=['start'])
 def start(message):
     chat_id = message.chat.id
-    keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    button_support = telebot.types.KeyboardButton(text="Пишем")
-    keyboard.add(button_support)
+    keyboard = types.ReplyKeyboardMarkup()
+    button1 = types.KeyboardButton('Пишем')
+    keyboard.add(button1)
+    bot.reply_to(message, 'Привет! Я бот.', reply_markup=keyboard)
 
-# @bot.message_handler(content_types=['text'])
-# def get_text_messages(message):
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    chat_id = message.chat.id
+    if message.text == 'Пишем':
+        words = iter(words_dict.items())
+        def write():
+            try:
+                word, rigth_answer = next(words)
+                msg = bot.send_message(chat_id, word)
+                print(message.text)
 
+                def examination(message):
+                    if (message.text).lower() == rigth_answer:
+                        bot.send_message(chat_id, f'🟢{rigth_answer}🟢')
+                        write()
+                    else:
+                        bot.send_message(chat_id, f'🔴{rigth_answer}🔴')
+                        write()
 
+                bot.register_next_step_handler(msg, examination)
 
-
-
+            except StopIteration:
+                bot.send_message(chat_id, 'Слова закончились')
+        write()
 
 bot.polling(none_stop=True)
