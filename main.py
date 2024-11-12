@@ -12,7 +12,7 @@ with open("words_coper.txt", "r", encoding='utf-8') as file:
 
 # print(words_dict)
 
-bot = telebot.TeleBot('API-KEY')
+bot = telebot.TeleBot('7998808652:AAEXyWyGuo3gjfZyryQOIlm6FU73s0JgFn0')
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -20,7 +20,7 @@ def start(message):
     keyboard = types.ReplyKeyboardMarkup()
     button1 = types.KeyboardButton('Пишем')
     keyboard.add(button1)
-    bot.reply_to(message, 'Бот работает так: он пишет слово на русском, а вы должны писать его на английском', reply_markup=keyboard)
+    bot.reply_to(message, 'Бот работает так: он пишет слово на русском, а вы должны писать его на английском. Чтобы начать нажмите на кнопку "Пишем"', reply_markup=keyboard)
 
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
@@ -29,30 +29,36 @@ def handle_message(message):
         items = list(input_dict.items())
         random.shuffle(items)
         return dict(items)
-
     words_dict2 = shuffle_dict(words_dict)
-    print(words_dict2)
+    wrong_words = {}
+
     chat_id = message.chat.id
-    if message.text == 'Пишем':
-        words = iter(words_dict2.items())
-        def write():
-            try:
-                word, rigth_answer = next(words)
-                msg = bot.send_message(chat_id, word)
-                print(message.text)
 
-                def examination(message):
-                    if (message.text).lower() == rigth_answer:
-                        bot.send_message(chat_id, f'🟢{rigth_answer}🟢')
-                        write()
-                    else:
-                        bot.send_message(chat_id, f'🔴{rigth_answer}🔴')
-                        write()
+    def write(dict):
+        print(dict)
+        if dict != {}:
+            def examination(message):
+                if message.text.lower() == rigth_answer:
+                    bot.send_message(chat_id, f'🟢{rigth_answer}🟢')
+                    del words_dict2[word]
+                    write(dict)
+                else:
+                    bot.send_message(chat_id, f'🔴{rigth_answer}🔴')
+                    del words_dict2[word]
+                    wrong_words[word] = rigth_answer
+                    write(dict)
 
-                bot.register_next_step_handler(msg, examination)
+            word = next(iter(dict))
+            rigth_answer = dict[word]
+            msg = bot.send_message(chat_id, word)
+            bot.register_next_step_handler(msg, examination)
 
-            except StopIteration:
-                bot.send_message(chat_id, 'Слова закончились')
-        write()
+        if dict == {} and wrong_words == {}:
+            bot.send_message(chat_id, 'Все слова верные, хорошая работа')
+
+
+
+    write(words_dict2)
+
 
 bot.polling(none_stop=True)
