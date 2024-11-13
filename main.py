@@ -10,7 +10,7 @@ with open("words_coper.txt", "r", encoding='utf-8') as file:
         word = i.split('$')
         words_dict[word[0]] = word[1] # words_dict = {'слово на русском': 'word on english'}
 
-# print(words_dict)
+print(words_dict)
 
 bot = telebot.TeleBot('7998808652:AAEXyWyGuo3gjfZyryQOIlm6FU73s0JgFn0')
 
@@ -34,29 +34,36 @@ def handle_message(message):
 
     chat_id = message.chat.id
 
-    def write(dict):
-        print(dict)
-        if dict != {}:
+    def write(dct):
+        print(dct)
+        if dct != {}:
             def examination(message):
                 if message.text.lower() == rigth_answer:
                     bot.send_message(chat_id, f'🟢{rigth_answer}🟢')
-                    del words_dict2[word]
-                    write(dict)
+                    del dct[word]
+
+                    try:
+                        del wrong_words[word]
+                    except: None
+                    write(dct)
                 else:
                     bot.send_message(chat_id, f'🔴{rigth_answer}🔴')
-                    del words_dict2[word]
+                    del dct[word]
                     wrong_words[word] = rigth_answer
-                    write(dict)
+                    write(dct)
 
-            word = next(iter(dict))
-            rigth_answer = dict[word]
+            word = next(iter(dct))
+            rigth_answer = dct[word]
             msg = bot.send_message(chat_id, word)
             bot.register_next_step_handler(msg, examination)
 
-        if dict == {} and wrong_words == {}:
-            bot.send_message(chat_id, 'Все слова верные, хорошая работа')
+        if dct == {} and wrong_words == {}:
+            bot.send_message(chat_id, 'Все слова верные, хорошая работа!')
 
-
+        if dct == {} and wrong_words != {}:
+            bot.send_message(chat_id, 'Работа над ошибками')
+            words_dict2 = wrong_words.copy()
+            write(words_dict2)
 
     write(words_dict2)
 

@@ -1,3 +1,18 @@
-кошка$cat
-собака$dog
-птица$bird
+прикладная физика$applied physics
+создание, формирование, выработка$generation
+научные исследования$scientific research
+благодаря усилиям$due to the efforts
+управление; обработка; преобразование$manipulation
+заменять электронные лампы$to replace vacuum tubes
+полупроводниковый кристалл$a piece of semiconductor
+уменьшенный вес$reduced weight
+потребление (расход) электроэнергии$power consumption
+выполнять; осуществлять$to carry out
+твердое тело; кристалл; полупроводник$solid body
+отвечать; реагировать$to respond
+со скоростью$at a rate
+интегральная схема$integrated circuit (IC)
+пакетная обработка$batch processing
+собирать; монтировать$to assemble
+снизить производительность$to lower manufacturing
+увеличить надежность$to increase reliability
