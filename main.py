@@ -1,7 +1,26 @@
 import telebot
 from telebot import types
 import random
+import os
+import sys
+import time
 
+
+def craet_words():
+    words_dict = {}
+    with open("words_coper.txt", "r", encoding='utf-8') as file:
+        words_list = file.read().split('\n')[:-1]
+        for i in words_list:
+            word = i.split('$')
+            words_dict[word[0]] = word[1] # words_dict = {'слово на русском': 'word on english'}
+
+    def shuffle_dict(input_dict):
+        items = list(input_dict.items())
+        random.shuffle(items)
+        return dict(items)
+    words_dict2 = shuffle_dict(words_dict)
+
+    return words_dict2
 
 words_dict = {}
 with open("words_coper.txt", "r", encoding='utf-8') as file:
@@ -22,7 +41,7 @@ def start(message):
     keyboard.add(button1)
     bot.reply_to(message, 'Бот работает так: он пишет слово на русском, а вы должны писать его на английском. Чтобы начать нажмите на кнопку "Пишем"', reply_markup=keyboard)
 
-@bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=lambda message: message.text == "Пишем")
 def handle_message(message):
 
     def shuffle_dict(input_dict):
@@ -35,9 +54,12 @@ def handle_message(message):
     chat_id = message.chat.id
 
     def write(dct):
-        print(dct)
         if dct != {}:
             def examination(message):
+                if message.text.lower() == '/stop':
+                    bot.send_message(chat_id, 'Тест остановлен')
+                    return craet_words
+
                 if message.text.lower() == rigth_answer:
                     bot.send_message(chat_id, f'🟢{rigth_answer}🟢')
                     del dct[word]
@@ -66,6 +88,16 @@ def handle_message(message):
             write(words_dict2)
 
     write(words_dict2)
+
+
+@bot.message_handler(commands=['restart'])
+def restart(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Бот перезапускается...")
+    bot.stop_polling()  # Завершаем текущий процесс polling
+    time.sleep(1)  # Небольшая пауза, чтобы завершить процессы
+    os.execv(sys.executable, [sys.executable] + sys.argv)  # Перезапускаем бот
+
 
 
 bot.polling(none_stop=True)

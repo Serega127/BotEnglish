@@ -11,7 +11,7 @@
 твердое тело; кристалл; полупроводник$solid body
 отвечать; реагировать$to respond
 со скоростью$at a rate
-интегральная схема$integrated circuit (IC)
+интегральная схема$integrated circuit
 пакетная обработка$batch processing
 собирать; монтировать$to assemble
 снизить производительность$to lower manufacturing
