@@ -4,7 +4,7 @@ import random
 
 def creat_words():
     words_dict = {}
-    with open("Words.txt", "r", encoding='utf-8') as file:
+    with open("words_coper.txt", "r", encoding='utf-8') as file:
         words_list = file.read().split('\n')[:-1]
         for i in words_list:
             word = i.split('$')
@@ -42,7 +42,6 @@ def handle_message(message):
 
 
     def write(func_chat_id):
-        print(users[func_chat_id][0])
         if users[func_chat_id][0] != {}:
             def examination(message):
                 if message.text.lower() == '/stop':
@@ -55,11 +54,13 @@ def handle_message(message):
                     try:
                         del users[func_chat_id][1][word]
                     except: None
+                    print(f'{message.from_user.first_name} Слов осталось : {len(users[func_chat_id][0])}, неправильных слов: {len(users[func_chat_id][1])}')
                     write(chat_id)
                 else:
                     bot.send_message(chat_id, f'🔴{rigth_answer}🔴')
                     del users[func_chat_id][0][word]
                     users[func_chat_id][1][word] = rigth_answer
+                    print(f'{message.from_user.first_name} Слов осталось : {len(users[func_chat_id][0])}, неправильных слов: {len(users[func_chat_id][1])}')
                     write(chat_id)
 
             word = next(iter(users[func_chat_id][0]))
@@ -75,6 +76,7 @@ def handle_message(message):
             users[func_chat_id][0], users[func_chat_id][1] = users[func_chat_id][1], users[func_chat_id][0]
             write(chat_id)
 
+    print(message.from_user.first_name, message.from_user.last_name, message.from_user.username)
     write(chat_id)
 
 
